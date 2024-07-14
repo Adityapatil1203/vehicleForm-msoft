@@ -6,6 +6,7 @@ import UserForm from './components/UserForm';
 import AdminPage from './components/AdminPage';
 import PasswordForm from './components/PasswordForm';
 import { adminpassword } from './const';
+import { baseUrl } from './const';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -21,12 +22,30 @@ function App() {
     }
   };
 
+  const handleFormSubmit = async (formData) => {
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+  console.log("form ",formData);
+    const response = await fetch(`${baseUrl}/api/users`, {
+      method: 'POST',
+      body: data,
+    });
+
+    if (response.ok) {
+      alert('User added successfully!');
+    } else {
+      alert('Failed to add user.');
+    }
+  };
+
   return (
     <Router>
       <div className="App">
         <Routes>
           {/* Show UserForm by default on root path */}
-          <Route path="/" element={<UserForm />} />
+          <Route path="/" element={<UserForm onSubmit={handleFormSubmit} />} />
 
           {/* Route to handle password submission and navigation */}
           <Route

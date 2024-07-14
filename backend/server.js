@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
-app.use(express.json())
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -28,10 +27,10 @@ const upload = multer({ storage });
 
 // MySQL connection
 const db = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '1234567890',
-	database: 'wxyzyqcr_project',
+  host: 'localhost',
+  user: 'root',
+  password: 'Aditya@123',
+  database: 'id',
 });
 
 db.connect((err) => {
@@ -43,12 +42,13 @@ db.connect((err) => {
 
 // API routes
 app.post('/api/users', upload.single('photo'), (req, res) => {
-  const { name, bloodGroup, mobile, station, licenseNo, vehicleNo, vehicleName, vehicleModel } = req.body;
+  const { name, bloodGroup, mobile, fromStation, toStation, licenseNo, vehicleNo, address, vehicleModel } = req.body;
   const photo = req.file.filename;
 
-  const query = 'INSERT INTO users (name, bloodGroup, mobile, station, licenseNo, vehicleNo, vehicleName, vehicleModel, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  db.query(query, [name, bloodGroup, mobile, station, licenseNo, vehicleNo, vehicleName, vehicleModel, photo], (err, results) => {
+  const query = 'INSERT INTO users (name, bloodGroup, mobile, fromStation, toStation, licenseNo, vehicleNo, address, vehicleModel, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  db.query(query, [name, bloodGroup, mobile, fromStation, toStation, licenseNo, vehicleNo, address, vehicleModel, photo], (err, results) => {
     if (err) {
+      console.log(err.message);
       return res.status(500).send(err);
     }
     res.status(201).send('User added successfully!');
